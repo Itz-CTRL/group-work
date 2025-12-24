@@ -218,6 +218,10 @@ def init_db():
         cur.execute('ALTER TABLE users ADD COLUMN open_to_networking INTEGER DEFAULT 1')
     except sqlite3.OperationalError:
         pass
+    try:
+        cur.execute('ALTER TABLE users ADD COLUMN course TEXT')
+    except sqlite3.OperationalError:
+        pass
     # Non-breaking ALTERs for transcripts: add purpose and addressed_to if missing
     try:
         cur.execute('ALTER TABLE transcripts ADD COLUMN purpose TEXT')
@@ -264,14 +268,15 @@ def signup():
         return redirect(url_for('signup'))
 
     school = request.form.get('school')
+    course = request.form.get('course')
     password_hash = generate_password_hash(password)
     conn = get_db_connection()
     cur = conn.cursor()
     try:
         # include optional profile columns (house, school) if present
         house = request.form.get('house') or None
-        cur.execute('INSERT INTO users (name, email, password_hash, role, created_at, house, school) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    (name, email, password_hash, role, datetime.utcnow().isoformat(), house, school))
+        cur.execute('INSERT INTO users (name, email, password_hash, role, created_at, house, school, course) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    (name, email, password_hash, role, datetime.utcnow().isoformat(), house, school, course))
         conn.commit()
         user_id = cur.lastrowid
     except sqlite3.IntegrityError:
@@ -291,6 +296,11 @@ def signup():
     session['email'] = email
     session['role'] = role
     session['name'] = name
+    # expose course to session for immediate use in templates
+    try:
+        session['course'] = course
+    except Exception:
+        session['course'] = session.get('course')
 
     flash('Account created and signed in.', 'success')
     if role == 'admin':
@@ -359,8 +369,9 @@ def profile():
         available_for_mentorship = 1 if request.form.get('available_for_mentorship') else 0
         open_to_networking = 1 if request.form.get('open_to_networking') else 0
         # update user (school is NOT editable from profile per design)
-        cur.execute('''UPDATE users SET name = ?, house = ?, graduation_year = ?, phone = ?, current_position = ?, company = ?, industry = ?, location = ?, bio = ?, linkedin = ?, twitter = ?, website = ?, github = ?, show_in_directory = ?, available_for_mentorship = ?, open_to_networking = ? WHERE email = ?''',
-                    (name, house, graduation_year, phone, current_position, company, industry, location, bio, linkedin, twitter, website, github, show_in_directory, available_for_mentorship, open_to_networking, session.get('email')))
+        # allow updating 'course' from profile settings as well
+        cur.execute('''UPDATE users SET name = ?, house = ?, graduation_year = ?, phone = ?, current_position = ?, company = ?, industry = ?, location = ?, bio = ?, linkedin = ?, twitter = ?, website = ?, github = ?, show_in_directory = ?, available_for_mentorship = ?, open_to_networking = ?, course = ? WHERE email = ?''',
+                (name, house, graduation_year, phone, current_position, company, industry, location, bio, linkedin, twitter, website, github, show_in_directory, available_for_mentorship, open_to_networking, request.form.get('course'), session.get('email')))
         conn.commit()
         # update session so dashboard shows latest values immediately
         session['name'] = name
@@ -376,7 +387,7 @@ def profile():
         # after updating profile, send user back to dashboard so changes are visible
         return redirect(url_for('student_dashboard'))
 
-    row = cur.execute('SELECT id, name, email, role, created_at, house, school, graduation_year, phone, current_position, company, industry, location, bio, linkedin, twitter, website, github, show_in_directory, available_for_mentorship, open_to_networking FROM users WHERE email = ?', (session.get('email'),)).fetchone()
+    row = cur.execute('SELECT id, name, email, role, created_at, house, school, graduation_year, phone, current_position, company, industry, location, bio, linkedin, twitter, website, github, show_in_directory, available_for_mentorship, open_to_networking, course FROM users WHERE email = ?', (session.get('email'),)).fetchone()
     user = dict(row) if row else None
     # ensure session contains latest profile values for immediate display on dashboard
     if user:
@@ -388,6 +399,8 @@ def profile():
             session['school'] = user.get('school')
         if user.get('graduation_year'):
             session['graduation_year'] = user.get('graduation_year')
+        if user.get('course'):
+            session['course'] = user.get('course')
     conn.close()
     return render_template('profile.html', user=user)
 

@@ -1190,7 +1190,7 @@
         </div>
         <div class="info-item">
           <span class="info-label">Programme Completed</span>
-          <span class="info-value">{{ session.get('programme', 'General Science') }}</span>
+          <span class="info-value">{{ session.get('course') or session.get('programme') or 'General Science' }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">Year of Graduation</span>
