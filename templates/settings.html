@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Settings</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --navy-blue:#1e3a8a; --white:#fff; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-600:#4b5563; --success:#10b981; --danger:#ef4444 }
+    *{box-sizing:border-box}
+    body{font-family:Poppins, sans-serif;background:linear-gradient(135deg,var(--gray-50),#fff);margin:0;color:#111}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .container{max-width:1100px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    .form-group{margin-bottom:1rem}
+    label{display:block;margin-bottom:0.5rem}
+    input,select,textarea{width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit}
+    .btn{padding:0.6rem 0.9rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s}
+    .btn-primary{background:var(--navy-blue);color:#fff}
+    .btn-primary:hover{background:#1e40af}
+    .btn-secondary{background:var(--gray-200)}
+    .flash-messages-container{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:1500;width:90%;max-width:600px}
+    .alert{padding:1rem;border-radius:12px;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem}
+    .alert-success{background:rgba(16,185,129,0.08);border:1px solid var(--success);color:var(--success)}
+    .alert-error{background:rgba(239,68,68,0.08);border:1px solid var(--danger);color:var(--danger)}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--navy-blue)">SHS Alumni Portal</div>
+          <div style="font-size:12px;color:#6b7280">Settings</div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages-container">
+        {% for category, message in messages %}
+          <div class="alert {{ 'alert-success' if category == 'success' else 'alert-error' }}">
+            <i data-lucide="{{ 'check-circle' if category == 'success' else 'alert-circle' }}" style="width:20px;height:20px"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="container">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+        <div>
+          <h2 style="margin:0 0 0.5rem">Account Settings</h2>
+          <p style="margin:0;color:var(--gray-600);font-size:0.875rem">Manage your account preferences and security settings</p>
+        </div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back</a>
+      </div>
+
+      <div style="margin-bottom:2rem">
+        <h3 style="margin:0 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:0.5rem">
+          <i data-lucide="shield" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+          Security
+        </h3>
+        <form method="post" action="{{ url_for('change_password') }}">
+          <div class="form-group">
+            <label for="current_password">Current Password</label>
+            <input id="current_password" name="current_password" type="password" placeholder="Enter your current password" required />
+          </div>
+          <div class="form-group">
+            <label for="new_password">New Password</label>
+            <input id="new_password" name="new_password" type="password" placeholder="Enter new password (min. 8 characters)" required minlength="8" />
+            <small style="color:var(--gray-600);font-size:0.875rem">Password must be at least 8 characters long</small>
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm New Password</label>
+            <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter new password" required />
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:1rem">
+            <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+              <i data-lucide="key" style="width:18px;height:18px"></i>
+              <span>Change Password</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div style="margin-bottom:2rem">
+        <h3 style="margin:0 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:0.5rem">
+          <i data-lucide="bell" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+          Notification Preferences
+        </h3>
+        <form id="notificationForm">
+          <div style="background:var(--gray-50);padding:1.5rem;border-radius:8px;margin-bottom:1rem">
+            <h4 style="margin:0 0 1rem;font-size:1rem">Email Notifications</h4>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem">
+                <input type="checkbox" name="email_newsletter" checked />
+                <div>
+                  <div style="font-weight:600">Newsletter Updates</div>
+                  <div style="font-size:0.875rem;color:var(--gray-600)">Receive monthly newsletter with alumni news and updates</div>
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem">
+                <input type="checkbox" name="email_events" checked />
+                <div>
+                  <div style="font-weight:600">Event Notifications</div>
+                  <div style="font-size:0.875rem;color:var(--gray-600)">Get notified about upcoming alumni events and reunions</div>
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem">
+                <input type="checkbox" name="email_jobs" checked />
+                <div>
+                  <div style="font-weight:600">Career Opportunities</div>
+                  <div style="font-size:0.875rem;color:var(--gray-600)">Receive job postings and career-related updates</div>
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0">
+                <input type="checkbox" name="email_messages" />
+                <div>
+                  <div style="font-weight:600">Direct Messages</div>
+                  <div style="font-size:0.875rem;color:var(--gray-600)">Get notified when other alumni send you messages</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div style="background:var(--gray-50);padding:1.5rem;border-radius:8px">
+            <h4 style="margin:0 0 1rem;font-size:1rem">Communication Frequency</h4>
+            <div class="form-group">
+              <label for="email_frequency">Email Digest Frequency</label>
+              <select id="email_frequency" name="email_frequency">
+                <option value="instant">Instant - Receive emails as they happen</option>
+                <option value="daily" selected>Daily - Once per day digest</option>
+                <option value="weekly">Weekly - Once per week digest</option>
+                <option value="monthly">Monthly - Once per month digest</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1rem">
+            <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+              <i data-lucide="save" style="width:18px;height:18px"></i>
+              <span>Save Preferences</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div style="margin-bottom:2rem">
+        <h3 style="margin:0 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:0.5rem">
+          <i data-lucide="lock" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+          Privacy Settings
+        </h3>
+        <form id="privacyForm">
+          <div style="background:var(--gray-50);padding:1.5rem;border-radius:8px">
+            <div class="form-group">
+              <label for="profile_visibility">Profile Visibility</label>
+              <select id="profile_visibility" name="profile_visibility">
+                <option value="public">Public - Visible to all alumni</option>
+                <option value="alumni" selected>Alumni Only - Visible to registered alumni</option>
+                <option value="private">Private - Only visible to you</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem">
+                <input type="checkbox" name="show_email" />
+                <span>Show email address on profile</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.75rem">
+                <input type="checkbox" name="show_phone" />
+                <span>Show phone number on profile</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0">
+                <input type="checkbox" name="allow_messages" checked />
+                <span>Allow other alumni to send me messages</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1rem">
+            <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+              <i data-lucide="save" style="width:18px;height:18px"></i>
+              <span>Save Privacy Settings</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:0.5rem">
+          <i data-lucide="user-cog" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+          Account Management
+        </h3>
+        <div style="background:var(--gray-50);padding:1.5rem;border-radius:8px">
+          <div style="margin-bottom:1.5rem">
+            <h4 style="margin:0 0 0.5rem;font-size:1rem">Download Your Data</h4>
+            <p style="margin:0 0 1rem;color:var(--gray-600);font-size:0.875rem">Request a copy of all your personal data stored in our system</p>
+            <button class="btn btn-secondary" onclick="requestDataDownload()">
+              <i data-lucide="download" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              Request Data Download
+            </button>
+          </div>
+          <div style="padding-top:1.5rem;border-top:1px solid var(--gray-200)">
+            <h4 style="margin:0 0 0.5rem;font-size:1rem;color:#ef4444">Danger Zone</h4>
+            <p style="margin:0 0 1rem;color:var(--gray-600);font-size:0.875rem">Permanently delete your account and all associated data. This action cannot be undone.</p>
+            <button class="btn" style="background:#ef4444;color:#fff" onclick="confirmDeleteAccount()">
+              <i data-lucide="trash-2" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    document.getElementById('notificationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Notification preferences saved successfully!');
+    });
+
+    document.getElementById('privacyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Privacy settings saved successfully!');
+    });
+
+    function requestDataDownload() {
+      alert('Your data download request has been submitted. You will receive an email with a download link within 24 hours.');
+    }
+
+    function confirmDeleteAccount() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.')) {
+        if (confirm('This is your final warning. Type "DELETE" in the next prompt to confirm.')) {
+          const confirmation = prompt('Type DELETE to confirm account deletion:');
+          if (confirmation === 'DELETE') {
+            alert('Account deletion request submitted. You will receive a confirmation email.');
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

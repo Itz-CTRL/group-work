@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Career Opportunities</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --navy-blue:#1e3a8a; --white:#fff; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-600:#4b5563; --blue-500:#3b82f6; --green-500:#10b981; --purple-500:#8b5cf6; --orange-500:#f97316 }
+    *{box-sizing:border-box}
+    body{font-family:Poppins, sans-serif;background:linear-gradient(135deg,var(--gray-50),#fff);margin:0;color:#111}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .container{max-width:1200px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-bottom:1.5rem}
+    .btn{padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s;text-decoration:none;display:inline-block}
+    .btn-primary{background:var(--navy-blue);color:#fff}
+    .btn-primary:hover{background:#1e40af}
+    .btn-secondary{background:var(--gray-200);color:#111}
+    .filters{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+    .filter-group{flex:1;min-width:200px}
+    .filter-group label{display:block;margin-bottom:0.5rem;font-weight:600;font-size:0.875rem;color:#374151}
+    .filter-group select,.filter-group input{width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit}
+    .job-grid{display:grid;gap:1.5rem}
+    .job-card{border:2px solid var(--gray-200);border-radius:12px;padding:1.5rem;transition:all 0.3s;cursor:pointer}
+    .job-card:hover{border-color:var(--navy-blue);transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.1)}
+    .job-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;gap:1rem}
+    .job-company{display:flex;align-items:center;gap:1rem}
+    .company-logo{width:56px;height:56px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex-shrink:0}
+    .job-title{font-size:1.25rem;font-weight:700;margin:0 0 0.25rem;color:var(--navy-blue)}
+    .company-name{color:var(--gray-600);font-size:0.875rem}
+    .job-badge{padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:600;white-space:nowrap}
+    .badge-full-time{background:rgba(16,185,129,0.1);color:var(--green-500)}
+    .badge-part-time{background:rgba(59,130,246,0.1);color:var(--blue-500)}
+    .badge-contract{background:rgba(139,92,246,0.1);color:var(--purple-500)}
+    .badge-internship{background:rgba(249,115,22,0.1);color:var(--orange-500)}
+    .job-details{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem;color:var(--gray-600);font-size:0.875rem}
+    .job-detail{display:flex;align-items:center;gap:0.5rem}
+    .job-description{color:var(--gray-600);line-height:1.6;margin-bottom:1rem}
+    .job-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem}
+    .tag{background:var(--gray-100);padding:0.25rem 0.75rem;border-radius:20px;font-size:0.75rem;color:var(--gray-600)}
+    .job-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--gray-200)}
+    .posted-date{color:var(--gray-600);font-size:0.875rem}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem}
+    .stat-card{text-align:center;padding:1.5rem;background:var(--gray-50);border-radius:8px}
+    .stat-number{font-size:2rem;font-weight:700;color:var(--navy-blue);margin-bottom:0.25rem}
+    .stat-label{color:var(--gray-600);font-size:0.875rem}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff"><i data-lucide="briefcase" style="width:20px;height:20px"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--navy-blue)">SHS Alumni Portal</div>
+          <div style="font-size:12px;color:#6b7280">Career Opportunities</div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h1 style="margin-top:0;color:var(--navy-blue)">Career Opportunities</h1>
+      <p style="color:var(--gray-600);margin-bottom:2rem">Explore job openings, internships, and career opportunities shared by our alumni network</p>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">247</div>
+          <div class="stat-label">Active Job Listings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">89</div>
+          <div class="stat-label">Companies Hiring</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1,200+</div>
+          <div class="stat-label">Applications This Month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="filter-group">
+          <label for="search">Search Jobs</label>
+          <input type="text" id="search" placeholder="Job title, company, or keyword..." />
+        </div>
+        <div class="filter-group">
+          <label for="job_type">Job Type</label>
+          <select id="job_type">
+            <option value="">All Types</option>
+            <option value="full-time">Full-time</option>
+            <option value="part-time">Part-time</option>
+            <option value="contract">Contract</option>
+            <option value="internship">Internship</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="location">Location</label>
+          <select id="location">
+            <option value="">All Locations</option>
+            <option value="remote">Remote</option>
+            <option value="new-york">New York, NY</option>
+            <option value="san-francisco">San Francisco, CA</option>
+            <option value="boston">Boston, MA</option>
+            <option value="chicago">Chicago, IL</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="experience">Experience Level</label>
+          <select id="experience">
+            <option value="">All Levels</option>
+            <option value="entry">Entry Level</option>
+            <option value="mid">Mid Level</option>
+            <option value="senior">Senior Level</option>
+            <option value="executive">Executive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="job-grid">
+      <div class="job-card" onclick="viewJob(1)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo">TC</div>
+            <div>
+              <h3 class="job-title">Senior Software Engineer</h3>
+              <div class="company-name">TechCorp Inc.</div>
+            </div>
+          </div>
+          <div class="job-badge badge-full-time">Full-time</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>San Francisco, CA</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$120k - $180k</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>5+ years</span>
+          </div>
+        </div>
+        <p class="job-description">We're seeking an experienced software engineer to join our growing team. You'll work on cutting-edge projects using modern technologies and collaborate with talented engineers.</p>
+        <div class="job-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">AWS</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 2 days ago</div>
+          <button class="btn btn-primary" onclick="applyJob(1, event)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" onclick="viewJob(2)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo" style="background:linear-gradient(135deg,var(--green-500),#059669)">DS</div>
+            <div>
+              <h3 class="job-title">Data Scientist</h3>
+              <div class="company-name">DataSolutions LLC</div>
+            </div>
+          </div>
+          <div class="job-badge badge-full-time">Full-time</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>Remote</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$100k - $150k</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>3+ years</span>
+          </div>
+        </div>
+        <p class="job-description">Join our data science team to build predictive models and derive insights from large datasets. Work remotely with flexible hours and competitive benefits.</p>
+        <div class="job-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Machine Learning</span>
+          <span class="tag">SQL</span>
+          <span class="tag">TensorFlow</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 5 days ago</div>
+          <button class="btn btn-primary" onclick="applyJob(2, event)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" onclick="viewJob(3)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo" style="background:linear-gradient(135deg,var(--purple-500),#a855f7)">MD</div>
+            <div>
+              <h3 class="job-title">Marketing Manager</h3>
+              <div class="company-name">Marketing Dynamics</div>
+            </div>
+          </div>
+          <div class="job-badge badge-full-time">Full-time</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>New York, NY</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$80k - $120k</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>4+ years</span>
+          </div>
+        </div>
+        <p class="job-description">Lead our marketing initiatives and develop strategies to grow our brand presence. Perfect opportunity for creative thinkers with proven track record.</p>
+        <div class="job-tags">
+          <span class="tag">Digital Marketing</span>
+          <span class="tag">SEO</span>
+          <span class="tag">Content Strategy</span>
+          <span class="tag">Analytics</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 1 week ago</div>
+          <button class="btn btn-primary" onclick="applyJob(3, event)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" onclick="viewJob(4)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo" style="background:linear-gradient(135deg,var(--orange-500),#ea580c)">FG</div>
+            <div>
+              <h3 class="job-title">Summer Internship - Software Development</h3>
+              <div class="company-name">Future Growth Tech</div>
+            </div>
+          </div>
+          <div class="job-badge badge-internship">Internship</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>Boston, MA</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$25/hour</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>Entry Level</span>
+          </div>
+        </div>
+        <p class="job-description">Gain hands-on experience in software development with mentorship from senior engineers. 12-week paid internship with potential for full-time conversion.</p>
+        <div class="job-tags">
+          <span class="tag">JavaScript</span>
+          <span class="tag">Git</span>
+          <span class="tag">Agile</span>
+          <span class="tag">Mentorship</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 3 days ago</div>
+          <button class="btn btn-primary" onclick="applyJob(4, event)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" onclick="viewJob(5)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">PD</div>
+            <div>
+              <h3 class="job-title">Product Designer</h3>
+              <div class="company-name">Product Design Co.</div>
+            </div>
+          </div>
+          <div class="job-badge badge-contract">Contract</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>Remote</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$90k - $130k</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>3+ years</span>
+          </div>
+        </div>
+        <p class="job-description">Design beautiful and intuitive user experiences for our SaaS products. Work with cross-functional teams in a fully remote environment.</p>
+        <div class="job-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">UI/UX</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">Design Systems</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 4 days ago</div>
+          <button class="btn btn-primary" onclick="applyJob(5, event)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="job-card" onclick="viewJob(6)">
+        <div class="job-header">
+          <div class="job-company">
+            <div class="company-logo" style="background:linear-gradient(135deg,#ef4444,#dc2626)">FC</div>
+            <div>
+              <h3 class="job-title">Financial Analyst</h3>
+              <div class="company-name">FinConsult Group</div>
+            </div>
+          </div>
+          <div class="job-badge badge-full-time">Full-time</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+            <span>Chicago, IL</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="dollar-sign" style="width:16px;height:16px"></i>
+            <span>$70k - $95k</span>
+          </div>
+          <div class="job-detail">
+            <i data-lucide="briefcase" style="width:16px;height:16px"></i>
+            <span>2+ years</span>
+          </div>
+        </div>
+        <p class="job-description">Analyze financial data and provide insights to drive business decisions. Great opportunity for growth in a dynamic consulting environment.</p>
+        <div class="job-tags">
+          <span class="tag">Excel</span>
+          <span class="tag">Financial Modeling</span>
+          <span class="tag">PowerBI</span>
+          <span class="tag">CFA Preferred</span>
+        </div>
+        <div class="job-footer">
+          <div class="posted-date">Posted 1 week ago</div>
+          <button class="btn btn-primary" onclick="applyJob(6, event)">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn btn-secondary" onclick="loadMoreJobs()">Load More Jobs</button>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function viewJob(id) {
+      console.log('Viewing job:', id);
+    }
+
+    function applyJob(id, event) {
+      event.stopPropagation();
+      alert('Applying for job #' + id + '\n\nThis would redirect to the application form or external application page.');
+    }
+
+    function loadMoreJobs() {
+      alert('Loading more job listings...\n\nThis would fetch additional job postings from the database.');
+    }
+
+    // Filter functionality
+    document.getElementById('search').addEventListener('input', filterJobs);
+    document.getElementById('job_type').addEventListener('change', filterJobs);
+    document.getElementById('location').addEventListener('change', filterJobs);
+    document.getElementById('experience').addEventListener('change', filterJobs);
+
+    function filterJobs() {
+      console.log('Filtering jobs based on selected criteria');
+      // Filter logic would be implemented here
+    }
+  </script>
+</body>
+</html>

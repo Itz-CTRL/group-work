@@ -1,0 +1,13 @@
+{# Flash rendering partial - accepts default Flask flashed messages #}
+<div id="serverMessages">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-error' }} flashed-alert show" role="status">
+          <i data-lucide="{{ 'check-circle' if category == 'success' else 'alert-circle' }}" style="width:20px; height:20px;"></i>
+          <span style="margin-left:0.5rem;">{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>

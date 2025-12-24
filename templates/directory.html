@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alumni Directory</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --navy-blue:#1e3a8a; --white:#fff; --gray-50:#f9fafb; --gray-200:#e5e7eb }
+    *{box-sizing:border-box}
+    body{font-family:Poppins, sans-serif;background:linear-gradient(135deg,var(--gray-50),#fff);margin:0;color:#111}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .container{max-width:1100px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+  </style>
+</head>
+<body>
+  {% set title = "Alumni Directory" %}
+  {% set back_url = url_for('student_dashboard') %}
+  {% include '_site_header.html' %}
+
+  <main class="container">
+    <div class="card">
+      <h2>Alumni Directory</h2>
+      <p>Implement search and listing as needed.</p>
+    </div>
+  </main>
+
+  <script>lucide.createIcons()</script>
+</body>
+</html>

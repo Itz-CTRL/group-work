@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Support Center</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --navy-blue:#1e3a8a; --white:#fff; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-600:#4b5563; --blue-500:#3b82f6; --green-500:#10b981 }
+    *{box-sizing:border-box}
+    body{font-family:Poppins, sans-serif;background:linear-gradient(135deg,var(--gray-50),#fff);margin:0;color:#111}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .container{max-width:1200px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-bottom:1.5rem}
+    .btn{padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s;text-decoration:none;display:inline-block}
+    .btn-primary{background:var(--navy-blue);color:#fff}
+    .btn-secondary{background:var(--gray-200);color:#111}
+    .support-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem 0}
+    .support-card{background:var(--white);border:2px solid var(--gray-200);border-radius:12px;padding:1.5rem;text-align:center;transition:all 0.3s;cursor:pointer}
+    .support-card:hover{border-color:var(--navy-blue);transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,0.1)}
+    .support-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#fff}
+    .faq-item{border-bottom:1px solid var(--gray-200);padding:1rem 0}
+    .faq-item:last-child{border-bottom:none}
+    .faq-question{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;padding:0.5rem 0}
+    .faq-question:hover{color:var(--navy-blue)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:var(--gray-600);padding:0 0.5rem}
+    .faq-answer.active{max-height:500px;padding:0.75rem 0.5rem}
+    .form-group{margin-bottom:1.5rem}
+    .form-group label{display:block;margin-bottom:0.5rem;font-weight:600;color:#374151}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit}
+    .contact-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:2rem 0}
+    .contact-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem;background:var(--gray-50);border-radius:8px}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff"><i data-lucide="help-circle" style="width:20px;height:20px"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--navy-blue)">SHS Alumni Portal</div>
+          <div style="font-size:12px;color:#6b7280">Support Center</div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h1 style="margin-top:0;text-align:center;color:var(--navy-blue)">How Can We Help You?</h1>
+      <p style="text-align:center;color:var(--gray-600);max-width:600px;margin:0 auto 2rem">Browse our support categories or contact us directly for assistance</p>
+      
+      <div class="support-grid">
+        <div class="support-card" onclick="scrollToSection('faq')">
+          <div class="support-icon">
+            <i data-lucide="message-circle-question" style="width:28px;height:28px"></i>
+          </div>
+          <h3 style="margin:0 0 0.5rem">FAQs</h3>
+          <p style="color:var(--gray-600);font-size:0.875rem;margin:0">Find answers to common questions</p>
+        </div>
+
+        <div class="support-card" onclick="scrollToSection('contact')">
+          <div class="support-icon">
+            <i data-lucide="mail" style="width:28px;height:28px"></i>
+          </div>
+          <h3 style="margin:0 0 0.5rem">Contact Us</h3>
+          <p style="color:var(--gray-600);font-size:0.875rem;margin:0">Send us a message directly</p>
+        </div>
+
+        <div class="support-card" onclick="scrollToSection('contact-info')">
+          <div class="support-icon">
+            <i data-lucide="phone" style="width:28px;height:28px"></i>
+          </div>
+          <h3 style="margin:0 0 0.5rem">Get in Touch</h3>
+          <p style="color:var(--gray-600);font-size:0.875rem;margin:0">View our contact information</p>
+        </div>
+
+        <div class="support-card">
+          <div class="support-icon">
+            <i data-lucide="book-open" style="width:28px;height:28px"></i>
+          </div>
+          <h3 style="margin:0 0 0.5rem">Documentation</h3>
+          <p style="color:var(--gray-600);font-size:0.875rem;margin:0">Browse user guides and tutorials</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="faq">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem">
+        <i data-lucide="help-circle" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+        Frequently Asked Questions
+      </h2>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How do I update my profile information?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Navigate to your profile page from the dashboard, click on "Edit Profile", make your changes, and click "Save Changes". Your information will be updated immediately.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How can I reset my password?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Go to Settings from your dashboard, enter your current password, then enter and confirm your new password. Click "Change Password" to complete the process.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How do I access the alumni directory?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Click on "Alumni Directory" from your dashboard. You can search for alumni by name, graduation year, or location. Make sure your profile is complete to appear in searches.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Can I make a donation to the alumni fund?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Yes! Visit the "Give Back / Donate" page from your dashboard. You can choose from various donation tiers and specify how you'd like your contribution to be used.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How do I register for alumni events?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Navigate to the "Events" section from your dashboard. Browse upcoming events and click "Register" on any event you'd like to attend. You'll receive a confirmation email with event details.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>How can I subscribe to the alumni newsletter?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Visit the "Newsletter" page and enter your email address in the subscription form. You can also manage your subscription preferences from your Settings page.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>What career resources are available?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          The "Career Opportunities" section features job postings, internships, and mentorship programs. You can also connect with alumni in your field of interest through the directory.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          <span>Is my personal information secure?</span>
+          <i data-lucide="chevron-down" style="width:20px;height:20px;transition:transform 0.3s"></i>
+        </div>
+        <div class="faq-answer">
+          Yes, we take data security seriously. All personal information is encrypted and stored securely. You can control your privacy settings from your Settings page.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="contact-info">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem">
+        <i data-lucide="phone" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+        Contact Information
+      </h2>
+      
+      <div class="contact-info">
+        <div class="contact-item">
+          <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-lucide="mail" style="width:24px;height:24px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Email</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">alumni@shs.edu</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">support@shs.edu</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-lucide="phone" style="width:24px;height:24px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Phone</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">+1 (555) 123-4567</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">Mon-Fri, 9AM-5PM EST</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-lucide="map-pin" style="width:24px;height:24px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Address</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">123 Alumni Drive</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">Springfield, ST 12345</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-lucide="clock" style="width:24px;height:24px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Office Hours</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">Monday - Friday</div>
+            <div style="color:var(--gray-600);font-size:0.875rem">9:00 AM - 5:00 PM EST</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="contact">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem">
+        <i data-lucide="send" style="width:24px;height:24px;color:var(--navy-blue)"></i>
+        Send Us a Message
+      </h2>
+      
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="John Doe" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="john@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Support Category</label>
+          <select id="category" name="category" required>
+            <option value="">Select a category</option>
+            <option value="account">Account & Login Issues</option>
+            <option value="profile">Profile Management</option>
+            <option value="events">Events & Registration</option>
+            <option value="donations">Donations & Payments</option>
+            <option value="directory">Alumni Directory</option>
+            <option value="technical">Technical Support</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Brief description of your issue" required />
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" placeholder="Please provide details about your inquiry..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Priority Level</label>
+          <select id="priority" name="priority">
+            <option value="low">Low - General inquiry</option>
+            <option value="medium" selected>Medium - Need assistance</option>
+            <option value="high">High - Urgent issue</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:1rem;justify-content:flex-end">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('contactForm').reset()">Clear</button>
+          <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+            <i data-lucide="send" style="width:18px;height:18px"></i>
+            <span>Send Message</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleFaq(element) {
+      const answer = element.nextElementSibling;
+      const icon = element.querySelector('[data-lucide="chevron-down"]');
+      const isActive = answer.classList.contains('active');
+      
+      document.querySelectorAll('.faq-answer').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.faq-question [data-lucide="chevron-down"]').forEach(el => {
+        el.style.transform = 'rotate(0deg)';
+      });
+      
+      if (!isActive) {
+        answer.classList.add('active');
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for contacting us! We will respond to your inquiry within 24-48 hours.');
+      this.reset();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile</title>
+  <link rel="icon" type="image/x-icon" href="gctu.ico" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Core shared styles (trimmed for consistency) */
+    :root { --navy-blue: #1e3a8a; --white: #ffffff; --gray-50:#f9fafb; --gray-200:#e5e7eb; --gray-600:#4b5563; --success:#10b981; --danger:#ef4444 }
+    *{box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--gray-50) 0%, #fff 100%);color:#1f2937;margin:0;padding:0}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;align-items:center;gap:0.75rem}
+    .brand-logo{width:44px;height:44px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+    .container{max-width:1100px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    .form-group{margin-bottom:1rem}
+    label{display:block;margin-bottom:0.5rem;font-weight:600}
+    input[type=text], input[type=password]{width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px}
+    .btn{padding:0.6rem 0.9rem;border-radius:8px;border:none;cursor:pointer}
+    .btn-primary{background:var(--navy-blue);color:#fff}
+    .btn-secondary{background:var(--gray-200);color:#111}
+    .flash-messages-container{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:1500;width:90%;max-width:600px}
+    .alert{padding:1rem;border-radius:12px;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem}
+    .alert-success{background:rgba(16,185,129,0.08);border:1px solid var(--success);color:var(--success)}
+    .alert-error{background:rgba(239,68,68,0.08);border:1px solid var(--danger);color:var(--danger)}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="brand">
+        <div class="brand-logo"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--navy-blue)">SHS Alumni Portal</div>
+          <div style="font-size:12px;color:#6b7280">Alumni Services</div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages-container">
+        {% for category, message in messages %}
+          <div class="alert {{ 'alert-success' if category == 'success' else 'alert-error' }}">
+            <i data-lucide="{{ 'check-circle' if category == 'success' else 'alert-circle' }}" style="width:20px;height:20px"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="container">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+        <div>
+          <h2 style="margin:0 0 0.5rem">My Profile</h2>
+          <p style="margin:0;color:var(--gray-600);font-size:0.875rem">Manage your personal information and professional details</p>
+        </div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back</a>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;padding:1.5rem;background:var(--gray-50);border-radius:12px">
+        <div style="width:100px;height:100px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:2.5rem;font-weight:700;flex-shrink:0">
+          {{ user.name[0] if user and user.name else 'U' }}
+        </div>
+        <div style="flex:1">
+          <h3 style="margin:0 0 0.5rem;font-size:1.5rem">{{ user.name if user else 'User Name' }}</h3>
+          <p style="margin:0;color:var(--gray-600)">{{ user.email if user else 'email@example.com' }}</p>
+          <div style="margin-top:0.75rem;display:flex;gap:0.5rem">
+            <button class="btn" style="background:var(--gray-200);padding:0.5rem 1rem;font-size:0.875rem" onclick="document.getElementById('profilePicInput').click()">
+              <i data-lucide="camera" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              Change Photo
+            </button>
+            <input type="file" id="profilePicInput" accept="image/*" style="display:none" onchange="alert('Profile picture upload functionality would be implemented here')" />
+          </div>
+        </div>
+      </div>
+
+      <form method="post" action="{{ url_for('profile') }}">
+        <h3 style="margin:0 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200)">Personal Information</h3>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input id="name" name="name" type="text" value="{{ user.name if user else '' }}" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="text" value="{{ user.email if user else '' }}" disabled style="background:var(--gray-100);cursor:not-allowed" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" placeholder="+1 (555) 123-4567" value="{{ user.phone if user and user.phone else '' }}" />
+          </div>
+          <div class="form-group">
+            <label for="graduation_year">Graduation Year</label>
+            <input id="graduation_year" name="graduation_year" type="number" placeholder="2020" min="1950" max="2030" value="{{ user.graduation_year if user and user.graduation_year else '' }}" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="house">House / Affiliation</label>
+          <input id="house" name="house" type="text" placeholder="e.g., Red House, Blue House" value="{{ user.house if user and user.house else '' }}" />
+        </div>
+
+        <h3 style="margin:2rem 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200)">Professional Information</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="current_position">Current Position</label>
+            <input id="current_position" name="current_position" type="text" placeholder="e.g., Software Engineer" value="{{ user.current_position if user and user.current_position else '' }}" />
+          </div>
+          <div class="form-group">
+            <label for="company">Company / Organization</label>
+            <input id="company" name="company" type="text" placeholder="e.g., TechCorp Inc." value="{{ user.company if user and user.company else '' }}" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="industry">Industry</label>
+            <select id="industry" name="industry">
+              <option value="">Select industry</option>
+              <option value="technology">Technology</option>
+              <option value="finance">Finance</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="education">Education</option>
+              <option value="consulting">Consulting</option>
+              <option value="marketing">Marketing</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" placeholder="City, State/Country" value="{{ user.location if user and user.location else '' }}" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Professional Bio</label>
+          <textarea id="bio" name="bio" rows="4" placeholder="Tell us about your professional journey and interests..." style="width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit;resize:vertical">{{ user.bio if user and user.bio else '' }}</textarea>
+        </div>
+
+        <h3 style="margin:2rem 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200)">Social Links</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="linkedin">
+              <i data-lucide="linkedin" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              LinkedIn Profile
+            </label>
+            <input id="linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/yourprofile" value="{{ user.linkedin if user and user.linkedin else '' }}" />
+          </div>
+          <div class="form-group">
+            <label for="twitter">
+              <i data-lucide="twitter" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              Twitter / X
+            </label>
+            <input id="twitter" name="twitter" type="url" placeholder="https://twitter.com/yourhandle" value="{{ user.twitter if user and user.twitter else '' }}" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem">
+          <div class="form-group">
+            <label for="website">
+              <i data-lucide="globe" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              Personal Website
+            </label>
+            <input id="website" name="website" type="url" placeholder="https://yourwebsite.com" value="{{ user.website if user and user.website else '' }}" />
+          </div>
+          <div class="form-group">
+            <label for="github">
+              <i data-lucide="github" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:0.25rem"></i>
+              GitHub Profile
+            </label>
+            <input id="github" name="github" type="url" placeholder="https://github.com/yourusername" value="{{ user.github if user and user.github else '' }}" />
+          </div>
+        </div>
+
+        <h3 style="margin:2rem 0 1rem;padding-bottom:0.75rem;border-bottom:2px solid var(--gray-200)">Preferences</h3>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" name="show_in_directory" {{ 'checked' if user and user.show_in_directory else '' }} />
+            <span>Show my profile in the Alumni Directory</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" name="available_for_mentorship" {{ 'checked' if user and user.available_for_mentorship else '' }} />
+            <span>Available for mentorship opportunities</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" name="open_to_networking" {{ 'checked' if user and user.open_to_networking else '' }} />
+            <span>Open to networking and collaboration</span>
+          </label>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--gray-200)">
+          <button type="button" class="btn btn-secondary" onclick="window.location.reload()">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+            <i data-lucide="save" style="width:18px;height:18px"></i>
+            <span>Save Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>lucide.createIcons()</script>
+</body>
+</html>

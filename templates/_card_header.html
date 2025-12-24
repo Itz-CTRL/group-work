@@ -1,0 +1,36 @@
+<!-- Card header used on auth pages (login/signup) -->
+<div class="card-header">
+  <div class="logo-container">
+    <i data-lucide="graduation-cap" style="width: 40px; height: 40px;"></i>
+  </div>
+  <!-- visible admin access link -->
+  <a href="{{ url_for('admin_login') }}" id="admin-link" title="Admin" class="admin-link" tabindex="0" role="button" style="position: absolute; right: 12px; top: 12px; font-size:0.85rem; color:#333; text-decoration:none; opacity:0.95; transition: opacity 0.12s ease; padding:6px 8px; border-radius:4px; background: rgba(0,0,0,0.02);">Admin</a>
+  <script>
+    (function(){
+      var a = document.getElementById('admin-link');
+      if(!a) return;
+      // single click navigates to admin login
+      a.addEventListener('click', function(e){
+        // allow normal navigation; preventDefault only to enable SPA-like redirect
+        e.preventDefault();
+        window.location = "{{ url_for('admin_login') }}";
+      });
+      // keyboard accessibility: Enter opens admin
+      a.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          window.location = "{{ url_for('admin_login') }}";
+        }
+      });
+      // slight hover effect
+      a.addEventListener('mouseenter', function(){ a.style.opacity=1; });
+      a.addEventListener('mouseleave', function(){ a.style.opacity=0.95; });
+    })();
+  </script>
+  <h1 class="portal-title"><a href="{{ url_for('admin_login') }}" style="color:inherit; text-decoration:none;">SHS Alumni Portal</a></h1>
+  {% if subtitle %}
+    <p class="portal-subtitle">{{ subtitle }}</p>
+  {% else %}
+    <p class="portal-subtitle">Welcome</p>
+  {% endif %}
+</div>

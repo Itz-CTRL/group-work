@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Give Back / Donate</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --navy-blue:#1e3a8a; --white:#fff; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-600:#4b5563; --blue-500:#3b82f6; --green-500:#10b981; --purple-500:#8b5cf6 }
+    *{box-sizing:border-box}
+    body{font-family:Poppins, sans-serif;background:linear-gradient(135deg,var(--gray-50),#fff);margin:0;color:#111}
+    .header{background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.06);position:sticky;top:0;z-index:100}
+    .header .header-content{max-width:1200px;margin:0 auto;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center}
+    .container{max-width:1200px;margin:2rem auto;padding:0 1rem}
+    .card{background:var(--white);padding:1.5rem;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-bottom:1.5rem}
+    .hero{background:linear-gradient(135deg,var(--navy-blue),var(--blue-500));color:#fff;padding:3rem 1.5rem;border-radius:12px;text-align:center;margin-bottom:2rem}
+    .hero h1{margin:0 0 1rem;font-size:2.5rem;font-weight:700}
+    .hero p{font-size:1.125rem;opacity:0.9;max-width:600px;margin:0 auto}
+    .donation-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:2rem 0}
+    .tier-card{background:var(--white);border:2px solid var(--gray-200);border-radius:12px;padding:1.5rem;text-align:center;transition:all 0.3s;cursor:pointer}
+    .tier-card:hover{border-color:var(--navy-blue);transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,0.1)}
+    .tier-card.featured{border-color:var(--navy-blue);background:linear-gradient(135deg,rgba(30,58,138,0.05),rgba(59,130,246,0.05))}
+    .tier-amount{font-size:2.5rem;font-weight:700;color:var(--navy-blue);margin:0.5rem 0}
+    .tier-name{font-size:1.25rem;font-weight:600;margin-bottom:0.5rem}
+    .tier-benefits{list-style:none;padding:0;margin:1rem 0;text-align:left}
+    .tier-benefits li{padding:0.5rem 0;display:flex;align-items:center;gap:0.5rem;color:var(--gray-600)}
+    .impact-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:2rem 0}
+    .impact-stat{text-align:center;padding:1.5rem}
+    .impact-number{font-size:2.5rem;font-weight:700;color:var(--navy-blue);margin-bottom:0.5rem}
+    .impact-label{color:var(--gray-600);font-size:0.875rem}
+    .btn{padding:0.75rem 1.5rem;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all 0.3s;text-decoration:none;display:inline-block}
+    .btn-primary{background:var(--navy-blue);color:#fff}
+    .btn-primary:hover{background:#1e40af}
+    .btn-secondary{background:var(--gray-200);color:#111}
+    .form-group{margin-bottom:1.5rem}
+    .form-group label{display:block;margin-bottom:0.5rem;font-weight:600;color:#374151}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem;border:1px solid var(--gray-200);border-radius:8px;font-family:inherit}
+    .payment-methods{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap}
+    .payment-method{padding:0.75rem 1.5rem;border:2px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.5rem}
+    .payment-method:hover,.payment-method.active{border-color:var(--navy-blue);background:rgba(30,58,138,0.05)}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--navy-blue),#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff"><i data-lucide="heart-handshake" style="width:20px;height:20px"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--navy-blue)">SHS Alumni Portal</div>
+          <div style="font-size:12px;color:#6b7280">Give Back / Donate</div>
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero">
+      <h1>Support Our Alumni Community</h1>
+      <p>Your generous contribution helps us build a stronger network, provide scholarships, and create opportunities for future generations of SHS alumni.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem"><i data-lucide="heart" style="width:24px;height:24px;color:var(--navy-blue)"></i> Choose Your Contribution</h2>
+      <div class="donation-tiers">
+        <div class="tier-card" onclick="selectTier(50)">
+          <div class="tier-name">Supporter</div>
+          <div class="tier-amount">$50</div>
+          <ul class="tier-benefits">
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Alumni newsletter</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Event updates</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Digital certificate</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%">Select</button>
+        </div>
+
+        <div class="tier-card featured" onclick="selectTier(150)">
+          <div style="background:var(--navy-blue);color:#fff;padding:0.25rem 0.75rem;border-radius:20px;display:inline-block;font-size:0.75rem;margin-bottom:0.5rem">MOST POPULAR</div>
+          <div class="tier-name">Patron</div>
+          <div class="tier-amount">$150</div>
+          <ul class="tier-benefits">
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> All Supporter benefits</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Exclusive networking events</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Recognition on website</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Mentorship opportunities</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%">Select</button>
+        </div>
+
+        <div class="tier-card" onclick="selectTier(500)">
+          <div class="tier-name">Benefactor</div>
+          <div class="tier-amount">$500</div>
+          <ul class="tier-benefits">
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> All Patron benefits</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> VIP event access</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Named scholarship fund</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Annual impact report</li>
+            <li><i data-lucide="check" style="width:16px;height:16px;color:var(--green-500)"></i> Advisory board invitation</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%">Select</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem"><i data-lucide="trending-up" style="width:24px;height:24px;color:var(--navy-blue)"></i> Our Impact</h2>
+      <div class="impact-section">
+        <div class="impact-stat">
+          <div class="impact-number">$2.5M</div>
+          <div class="impact-label">Total Raised This Year</div>
+        </div>
+        <div class="impact-stat">
+          <div class="impact-number">150+</div>
+          <div class="impact-label">Scholarships Awarded</div>
+        </div>
+        <div class="impact-stat">
+          <div class="impact-number">3,200</div>
+          <div class="impact-label">Active Donors</div>
+        </div>
+        <div class="impact-stat">
+          <div class="impact-number">25</div>
+          <div class="impact-label">Programs Funded</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;display:flex;align-items:center;gap:0.5rem"><i data-lucide="credit-card" style="width:24px;height:24px;color:var(--navy-blue)"></i> Donation Form</h2>
+      <form id="donationForm">
+        <div class="form-group">
+          <label>Donation Amount</label>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.75rem;margin-bottom:0.75rem">
+            <button type="button" class="btn btn-secondary" onclick="setAmount(25)">$25</button>
+            <button type="button" class="btn btn-secondary" onclick="setAmount(50)">$50</button>
+            <button type="button" class="btn btn-secondary" onclick="setAmount(100)">$100</button>
+            <button type="button" class="btn btn-secondary" onclick="setAmount(250)">$250</button>
+          </div>
+          <input type="number" id="amount" name="amount" placeholder="Enter custom amount" min="1" required />
+        </div>
+
+        <div class="form-group">
+          <label>Donation Type</label>
+          <select name="donation_type" required>
+            <option value="">Select donation type</option>
+            <option value="general">General Fund</option>
+            <option value="scholarship">Scholarship Fund</option>
+            <option value="infrastructure">Infrastructure Development</option>
+            <option value="events">Alumni Events</option>
+            <option value="mentorship">Mentorship Programs</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Method</label>
+          <div class="payment-methods">
+            <div class="payment-method active" onclick="selectPayment(this)">
+              <i data-lucide="credit-card" style="width:20px;height:20px"></i>
+              <span>Credit Card</span>
+            </div>
+            <div class="payment-method" onclick="selectPayment(this)">
+              <i data-lucide="smartphone" style="width:20px;height:20px"></i>
+              <span>PayPal</span>
+            </div>
+            <div class="payment-method" onclick="selectPayment(this)">
+              <i data-lucide="building-2" style="width:20px;height:20px"></i>
+              <span>Bank Transfer</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="donor_name">Full Name</label>
+          <input type="text" id="donor_name" name="donor_name" placeholder="John Doe" required />
+        </div>
+
+        <div class="form-group">
+          <label for="donor_email">Email Address</label>
+          <input type="email" id="donor_email" name="donor_email" placeholder="john@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message (Optional)</label>
+          <textarea id="message" name="message" rows="3" placeholder="Share why you're supporting SHS Alumni..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" name="recurring" />
+            <span>Make this a monthly recurring donation</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" name="anonymous" />
+            <span>Donate anonymously</span>
+          </label>
+        </div>
+
+        <div style="display:flex;gap:1rem;justify-content:flex-end">
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url_for('student_dashboard') }}';">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="display:flex;align-items:center;gap:0.5rem">
+            <i data-lucide="heart" style="width:18px;height:18px"></i>
+            <span>Complete Donation</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function selectTier(amount) {
+      document.getElementById('amount').value = amount;
+      document.getElementById('amount').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function setAmount(amount) {
+      document.getElementById('amount').value = amount;
+    }
+
+    function selectPayment(element) {
+      document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you for your generous donation! This is a demo - payment processing would be integrated here.');
+    });
+  </script>
+</body>
+</html>
