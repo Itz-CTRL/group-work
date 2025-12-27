@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHS Admin Dashboard</title>
+  <title>GradBridge-Admin Dashboard</title>
   <link rel="icon" type="image/x-icon" href="gctu.ico" />
   
   <!-- Google Fonts -->
@@ -851,7 +851,7 @@
         </div>
         <div class="logo-text">
           <h1>Admin Dashboard</h1>
-          <p>SHS Alumni Portal</p>
+          <p>GradBridge</p>
         </div>
       </div>
       <div class="header-actions">
@@ -1188,6 +1188,8 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Alum ID</th>
+                <th>Graduation Year</th>
                 <th>Joined</th>
                 <th>Actions</th>
               </tr>
@@ -2288,6 +2290,8 @@
               <td>${u.name || ''}</td>
               <td>${u.email}</td>
               <td>${u.role}</td>
+              <td>${u.alum_id || ''}</td>
+              <td>${u.graduation_year || ''}</td>
               <td>${new Date(u.created_at).toLocaleString()}</td>
               <td>
                 <button class="action-btn btn-view" onclick="viewUser(${u.id})">
@@ -2325,6 +2329,8 @@
           <td>${u.name || ''}</td>
           <td>${u.email}</td>
           <td>${u.role}</td>
+          <td>${u.alum_id || ''}</td>
+          <td>${u.graduation_year || ''}</td>
           <td>${new Date(u.created_at).toLocaleString()}</td>
           <td>
             <button class="action-btn btn-view" onclick="viewUser(${u.id})">
@@ -2367,6 +2373,14 @@
         <div class="detail-row">
           <div class="detail-label">Joined</div>
           <div class="detail-value">${new Date(u.created_at).toLocaleString()}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Alum ID</div>
+          <div class="detail-value">${u.alum_id || ''}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Graduation Year</div>
+          <div class="detail-value">${u.graduation_year || ''}</div>
         </div>
       `;
 

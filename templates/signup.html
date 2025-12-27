@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SHS Alumni Portal - Sign Up</title>
+  <title>GradBridge - Sign Up</title>
   <link rel="icon" type="image/x-icon" href="gctu.ico" />
   
   <!-- Google Fonts -->
@@ -134,6 +134,68 @@
       content: '*';
       color: var(--danger);
       margin-left: 4px;
+    }
+
+    /* Radio buttons */
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      transition: color 0.2s ease;
+    }
+
+    .radio-label:hover {
+      color: var(--navy-blue);
+    }
+
+    .radio-label input[type="radio"] {
+      display: none;
+    }
+
+    .radio-custom {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gray-300);
+      border-radius: 50%;
+      position: relative;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .radio-custom::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--navy-blue);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.2s ease;
+    }
+
+    .radio-label input[type="radio"]:checked + .radio-custom {
+      border-color: var(--navy-blue);
+    }
+
+    .radio-label input[type="radio"]:checked + .radio-custom::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .radio-label input[type="radio"]:checked ~ span {
+      color: var(--navy-blue);
+      font-weight: 600;
     }
 
     .input-wrapper {
@@ -376,6 +438,34 @@
             </div>
           </div>
 
+          <!-- Education Type -->
+          <div class="form-group">
+            <label class="form-label required">Education Type</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input 
+                  type="radio" 
+                  name="education_type" 
+                  value="university" 
+                  id="educationUniversity"
+                  checked
+                />
+                <span class="radio-custom"></span>
+                University
+              </label>
+              <label class="radio-label">
+                <input 
+                  type="radio" 
+                  name="education_type" 
+                  value="shs" 
+                  id="educationSHS"
+                />
+                <span class="radio-custom"></span>
+                Senior High School (SHS)
+              </label>
+            </div>
+          </div>
+
           <!-- Course / Programme Completed -->
           <div class="form-group">
             <label class="form-label" for="course">Course / Programme Completed</label>
@@ -387,6 +477,55 @@
                 name="course"
                 class="form-input"
                 placeholder="e.g.,General Science, General Arts etc"
+              />
+            </div>
+          </div>
+
+          <!-- Graduation Year -->
+          <div class="form-group">
+            <label class="form-label required" for="graduation_year">Graduation Year</label>
+            <div class="input-wrapper">
+              <i data-lucide="calendar" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input
+                type="number"
+                id="graduation_year"
+                name="graduation_year"
+                class="form-input"
+                placeholder="e.g., 2018"
+                min="1900"
+                max="2100"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Index Number (shown for SHS) -->
+          <div class="form-group" id="indexNumberGroup" style="display: none;">
+            <label class="form-label required" for="index_number">Index Number</label>
+            <div class="input-wrapper">
+              <i data-lucide="hash" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input
+                type="text"
+                id="index_number"
+                name="index_number"
+                class="form-input"
+                placeholder="Your old school index number"
+              />
+            </div>
+          </div>
+
+          <!-- Matric Number (shown for University) -->
+          <div class="form-group" id="schoolIdGroup">
+            <label class="form-label required" for="school_id">Matric Number</label>
+            <div class="input-wrapper">
+              <i data-lucide="tag" class="input-icon" style="width: 20px; height: 20px;"></i>
+              <input
+                type="text"
+                id="school_id"
+                name="school_id"
+                class="form-input"
+                placeholder="Your university matric number"
+                required
               />
             </div>
           </div>
@@ -444,7 +583,7 @@
 
     <!-- Footer -->
     <div class="footer">
-      <p>&copy; 2025 SHS Alumni Portal. All rights reserved.</p>
+      <p>&copy; 2025 GradBridge. All rights reserved.</p>
       <p style="margin-top:6px; font-size:0.85rem;"><a href="{{ url_for('admin_login') }}" style="color:#666; text-decoration:underline;">Admin Login</a></p>
     </div>
   </div>
@@ -461,6 +600,41 @@
     const passwordInput = document.getElementById('password');
     const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
     const confirmPasswordInput = document.getElementById('confirmPassword');
+    
+    // Education type elements
+    const educationUniversity = document.getElementById('educationUniversity');
+    const educationSHS = document.getElementById('educationSHS');
+    const indexNumberGroup = document.getElementById('indexNumberGroup');
+    const schoolIdGroup = document.getElementById('schoolIdGroup');
+    const indexNumberInput = document.getElementById('index_number');
+    const schoolIdInput = document.getElementById('school_id');
+
+    // Function to handle education type change
+    function handleEducationTypeChange() {
+      if (educationSHS.checked) {
+        // SHS selected - show Index Number, hide Matric Number
+        indexNumberGroup.style.display = 'block';
+        schoolIdGroup.style.display = 'none';
+        indexNumberInput.required = true;
+        schoolIdInput.required = false;
+        schoolIdInput.value = ''; // Clear the value
+      } else {
+        // University selected - show Matric Number, hide Index Number
+        indexNumberGroup.style.display = 'none';
+        schoolIdGroup.style.display = 'block';
+        indexNumberInput.required = false;
+        schoolIdInput.required = true;
+        indexNumberInput.value = ''; // Clear the value
+      }
+      lucide.createIcons();
+    }
+
+    // Add event listeners for education type
+    educationUniversity.addEventListener('change', handleEducationTypeChange);
+    educationSHS.addEventListener('change', handleEducationTypeChange);
+    
+    // Initialize on page load
+    handleEducationTypeChange();
 
     // PASSWORD VISIBILITY TOGGLE for Password field
     passwordToggle.addEventListener('click', function() {
@@ -516,10 +690,45 @@
 
     // Signup handled by server. Keep only UI interactions (toggles, alerts) here.
 
-    // Show loading spinner and disable button on form submit to provide feedback
-    signupForm.addEventListener('submit', function() {
+    // Show fake 'connecting to school database' overlay then submit
+    function showConnectingOverlay(schoolName, cb) {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.left = 0;
+      overlay.style.top = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.5)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = 9999;
+      overlay.innerHTML = '<div style="background:#fff;padding:1.5rem 2rem;border-radius:12px;display:flex;align-items:center;gap:1rem;max-width:90%"><div class="spinner" style="width:22px;height:22px;border-width:3px;border-top-color:#1e3a8a"></div><div style="font-weight:600;color:#111">Connecting to ' + (schoolName || 'school') + ' database... Retrieving credentials</div></div>';
+      document.body.appendChild(overlay);
+      setTimeout(function() {
+        document.body.removeChild(overlay);
+        cb && cb();
+      }, 9000);
+    }
+
+    signupForm.addEventListener('submit', function(e) {
+      // client-side password confirmation check
+      const pwd = document.getElementById('password').value;
+      const cpwd = document.getElementById('confirmPassword').value;
+      if (pwd !== cpwd) {
+        e.preventDefault();
+        showError('Passwords do not match');
+        return;
+      }
+
+      e.preventDefault();
       signupBtn.disabled = true;
       btnText.innerHTML = '<span class="spinner" aria-hidden="true"></span> Creating...';
+      const schoolName = document.getElementById('school').value || '';
+      showConnectingOverlay(schoolName, function() {
+        // submit the form after the fake connecting overlay
+        signupForm.submit();
+      });
     });
 
     // Auto-hide server flash messages with smooth transition

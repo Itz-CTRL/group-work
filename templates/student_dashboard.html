@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SHS Alumni Portal - Dashboard</title>
+  <title>GradBridge - Dashboard</title>
   <link rel="icon" type="image/x-icon" href="gctu.ico" />
   
   <!-- Google Fonts -->
@@ -1095,7 +1095,7 @@
           <i data-lucide="graduation-cap" style="width: 28px; height: 28px;"></i>
         </div>
         <div class="brand-text">
-          <div class="brand-title">SHS Alumni Portal</div>
+          <div class="brand-title">GradBridge</div>
           <div class="brand-subtitle">Senior High School Alumni Services</div>
         </div>
       </div>
@@ -1186,7 +1186,7 @@
       <div class="info-grid">
         <div class="info-item">
           <span class="info-label">Alumni ID</span>
-          <span class="info-value">ALM{{ session.get('user_id') or '0000' }}</span>
+          <span class="info-value">{{ session.get('alum_id') or ('ALM' ~ (session.get('user_id') or '0000')) }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">Programme Completed</span>
@@ -1200,10 +1200,7 @@
           <span class="info-label">School</span>
           <span class="info-value">{{ session.get('school', 'Your School') }}</span>
         </div>
-        <div class="info-item">
-          <span class="info-label">House</span>
-          <span class="info-value">{{ session.get('house', 'Blue House') }}</span>
-        </div>
+        <!-- House removed from dashboard (not all alumni belong to a campus house) -->
         <div class="info-item">
           <span class="info-label">Membership Status</span>
           <span class="info-value">Active</span>
@@ -1433,7 +1430,7 @@
             <div class="complaint-header">
               <div>
                 <div class="complaint-id">FDB-2024-078</div>
-                <div class="complaint-title">Alumni Portal Improvement Suggestion</div>
+                <div class="complaint-title">GradBridge Improvement Suggestion</div>
               </div>
               <span class="status-badge pending">
                 <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
@@ -1619,7 +1616,7 @@
   </div>
 
   <footer class="footer">
-    <p>&copy; 2025 Senior High School Alumni Portal. All rights reserved.</p>
+    <p>&copy; 2025 GradBridge. All rights reserved.</p>
   </footer>
 
   <script>

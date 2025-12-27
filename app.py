@@ -222,6 +222,10 @@ def init_db():
         cur.execute('ALTER TABLE users ADD COLUMN course TEXT')
     except sqlite3.OperationalError:
         pass
+    try:
+        cur.execute('ALTER TABLE users ADD COLUMN education_type TEXT CHECK(education_type IN ("university", "shs"))')
+    except sqlite3.OperationalError:
+        pass
     # Non-breaking ALTERs for transcripts: add purpose and addressed_to if missing
     try:
         cur.execute('ALTER TABLE transcripts ADD COLUMN purpose TEXT')
@@ -269,14 +273,15 @@ def signup():
 
     school = request.form.get('school')
     course = request.form.get('course')
+    education_type = request.form.get('education_type') or 'university'
     password_hash = generate_password_hash(password)
     conn = get_db_connection()
     cur = conn.cursor()
     try:
-        # include optional profile columns (house, school) if present
+        # include optional profile columns (house, school, education_type) if present
         house = request.form.get('house') or None
-        cur.execute('INSERT INTO users (name, email, password_hash, role, created_at, house, school, course) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                    (name, email, password_hash, role, datetime.utcnow().isoformat(), house, school, course))
+        cur.execute('INSERT INTO users (name, email, password_hash, role, created_at, house, school, course, education_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    (name, email, password_hash, role, datetime.utcnow().isoformat(), house, school, course, education_type))
         conn.commit()
         user_id = cur.lastrowid
     except sqlite3.IntegrityError:
@@ -296,11 +301,13 @@ def signup():
     session['email'] = email
     session['role'] = role
     session['name'] = name
-    # expose course to session for immediate use in templates
+    # expose course and education_type to session for immediate use in templates
     try:
         session['course'] = course
+        session['education_type'] = education_type
     except Exception:
         session['course'] = session.get('course')
+        session['education_type'] = session.get('education_type')
 
     flash('Account created and signed in.', 'success')
     if role == 'admin':
