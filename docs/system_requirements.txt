@@ -1,0 +1,217 @@
+GradBridge — System Requirements
+
+1. Project Conceptualization
+- Problem Statement:
+	Many alumni networks lack a central, lightweight system for graduates to manage their profiles, request official documents (transcripts, testimonials), discover events and jobs, engage in mentorship, and donate — while school administrators need tools to manage requests, track progress, and communicate with alumni. This project delivers an easy-to-deploy alumni portal called "GradBridge".
+
+- Objectives:
+	- Provide secure registration and profile management for alumni (including `course` / programme completed).
+	- Provide request workflows for transcripts and testimonials with admin review and trackable status.
+	- Offer basic community features: events, jobs board, mentorship matching, and newsletter subscriptions.
+	- Allow safe admin operations: notifications, trash (soft-delete) management, analytics, and bulk actions.
+	- Be deployable on simple PaaS (Render) with Postgres in production and SQLite for local development.
+
+- Key Stakeholders:
+	- Alumni (end users): register, update profile, request documents, and engage with services.
+	- School administrators: manage requests, approve/reject, add events/jobs, and communicate with alumni.
+	- Project maintainers/developers: implement, deploy, and maintain the system.
+	- Donors & Partners: provide funding (via donations) and opportunities.
+
+2. Feasibility Analysis
+
+2.1 Technical Feasibility
+- Current stack (Flask + Jinja2 + SQLite/Postgres) is straightforward and well-suited for a small-to-medium web app.
+- Pros: Fast to prototype, easy to host on Render, minimal dependencies.
+- Cons: The single-file app requires refactor to scale (app factory, blueprints); migration tooling (Alembic) would be needed for production schema evolution.
+
+2.2 Economic Feasibility (mock Cost-Benefit Summary)
+- Costs (yearly estimates for a small deployment):
+	- Managed Postgres (Render/Heroku/Supabase): $30 - $100 / month → $360 - $1,200
+	- Render web service (starter plan): $7 - $50 / month → $84 - $600
+	- Domain + TLS: $12 - $50/year
+	- Maintenance (developer time): 40 hours/year → $1,200 (conservative)
+	- Misc tools/monitoring: $100/year
+	Total annual cost (low): ~$1,756; (high): ~$3,150
+
+- Benefits (monetized where possible):
+	- Improved alumni engagement → potential fundraising increase (e.g., if donations grow by $5,000/year attributable to portal).
+	- Admin time savings: automating requests could save ~50 hours/year (~$1,500 value).
+
+- Simple cost-benefit: If the portal helps raise or save $2,500+ per year, it pays for itself. Benefit/cost ratio is expected >1 for typical alumni programs.
+
+2.3 Operational Feasibility
+- Operations are lightweight: minimal infra, deploy via Render, routine backups for Postgres, and periodic cron for trash cleanup.
+- Admins need a simple operational dashboard and a documented process for sensitive actions (permanent deletes, cron secrets).
+
+3. Requirements Specification
+
+3.1 Functional Requirements (table)
+
+| ID  | Requirement (Functional)                                      | Priority |
+|-----|---------------------------------------------------------------|----------|
+| FR1 | User sign-up with name, email, password, school, course       | High     |
+| FR2 | Secure login/logout (session-based)                           | High     |
+| FR3 | Profile view/edit (course editable)                           | High     |
+| FR4 | Request transcripts/testimonials (purpose, addressed_to)      | High     |
+| FR5 | Admin review/update request status + add notes                | High     |
+| FR6 | Notifications to users (individual or broadcast)              | High     |
+| FR7 | Soft-delete (trash), restore, permanent delete (single/bulk)  | High     |
+| FR8 | Events listing & RSVP                                          | Medium   |
+| FR9 | Jobs board & application submission                            | Medium   |
+| FR10| Mentorship sign-up/search                                      | Medium   |
+| FR11| Newsletter subscription                                        | Low      |
+| FR12| Donation form (UI) & record of donations (placeholder)        | Low      |
+| FR13| Directory search with filters                                 | Medium   |
+
+3.2 Non-Functional Requirements (table)
+
+| ID  | Requirement (Non-Functional)                   | Target / Constraint                          |
+|-----|------------------------------------------------|----------------------------------------------|
+| NFR1| Performance                                   | Avg API response < 300ms (small dataset)     |
+| NFR2| Availability                                  | 99.5% (with managed hosting)                  |
+| NFR3| Security                                      | TLS, hashed passwords, env-var secrets       |
+| NFR4| Data durability                               | Daily DB backups (managed Postgres)          |
+| NFR5| Scalability                                   | Able to scale to multiple instances (Postgres)|
+| NFR6| Privacy / Compliance                          | Directory opt-in, limit PII exposure         |
+| NFR7| Maintainability                               | Code structured for refactor and tests       |
+| NFR8| Observability                                 | Application logs, error tracking             |
+
+4. Process Modeling
+
+4.1 Context Diagram (Level 0 DFD) — description
+- External Entities:
+	- Alumni (Student user): interacts with web UI to sign up, update profile, request documents, view events/jobs, donate.
+	- Admins: use admin UI to review and manage requests, send notifications, run cleanup.
+	- Payment Provider (external): optional for donation processing.
+	- Email/Notification Service (external): optional for sending newsletters and notifications.
+
+-- System (GradBridge) central box: receives requests from Alumni and Admins, stores data in DB, communicates with external services.
+
+4.2 Level 1 DFD — major sub-processes and data stores (descriptive)
+- Sub-processes:
+	P1: Authentication & Session Management (sign-up, login, logout)
+	P2: Profile Management (view/edit profile, change course)
+	P3: Requests Management (create transcript/testimonial requests, update status)
+	P4: Notifications & Messaging (create, fetch, mark-read, clear)
+	P5: Events & Jobs (CRUD for admins, listing and RSVP/apply for users)
+	P6: Trash & Cleanup (soft-delete, restore, permanent delete, scheduled purge)
+	P7: Donations & Newsletter (record donations, subscribe newsletters)
+
+- Data Stores:
+	- D1: Users table
+	- D2: Requests (transcripts/testimonials)
+	- D3: Notifications
+	- D4: Events, Jobs, Applications
+	- D5: Donations, Newsletter subscriptions
+
+- Data flows examples:
+	- Alumni → P1 → D1 (create user)
+	- Alumni → P3 → D2 (create transcript request)
+	- Admin → P3 → D2 (update status, add notes) → P4 → D3 (notify user)
+
+5. Use Case Modeling
+
+5.1 Key Actors
+- Student (Alumnus)
+- Admin
+- External Payment Provider (optional)
+- External Email Service (optional)
+
+5.2 Key Use Cases (brief)
+- UC1: Sign up
+- UC2: Login / Logout
+- UC3: Edit Profile (change course)
+- UC4: Request Transcript/Testimonial
+- UC5: Admin Review Request
+- UC6: Soft-delete / Restore / Permanent Delete
+- UC7: Send Notification
+- UC8: Create Event / RSVP
+- UC9: Create Job / Apply
+
+5.3 Detailed Use Case Description — Login
+
+Use Case ID: UC2
+Name: Login
+Primary Actor: Student or Admin
+Goal: Authenticate a user and establish a secure session
+Preconditions:
+	- User has an account (email & password stored). For Admins, ADMIN_SECRET may be used for bootstrap.
+Postconditions:
+	- Valid credentials: session established with `user_id`, `email`, `role`, and `course` in session.
+	- Invalid credentials: no session; user receives an error message.
+
+Main Success Scenario (Normal Flow):
+	1. User navigates to `/login` and submits email & password.
+	2. System receives POST and looks up the user by email in `users` store.
+	3. System compares submitted password with stored hashed password using `check_password_hash`.
+	4. If match, system creates a session: `session['user_id']`, `session['email']`, `session['role']`, `session['name']`, `session['course']` and redirects user to the appropriate dashboard (`/admin/dashboard` for admin, `/student/dashboard` for student).
+	5. Success message displayed.
+
+Alternate Flows (Error Handling):
+	A1: Missing fields — the system returns an error prompting the user to fill required fields.
+	A2: Invalid credentials — the system flashes "Invalid email or password" and logs a failed login attempt.
+	A3: Admin SECRET login — if password equals `ADMIN_SECRET`, system checks/creates an admin user row and then signs in.
+	A4: DB unavailable — the system shows a temporary error and logs the failure for admins.
+
+6. Logical Design — System Flowchart (text description)
+
+Core Process: "Create Transcript Request" flowchart description
+
+Start -> Display 'New Request' form (student) -> Input validation? [Decision]
+	- If NO (validation fails) -> Show validation errors -> End (or loop back to form)
+	- If YES -> Save request to `transcripts` with status='processing' -> Notify admins (insert into notifications)
+ -> Did DB commit succeed? [Decision]
+	- If NO -> Log error, show friendly error to user, offer retry -> End
+	- If YES -> Show success message and redirect to Track Requests -> End
+
+Admin Update path (separate flow): Admin edits request -> Save changes -> Append admin notes and update status -> Notify student -> Commit -> If commit fails show error and log.
+
+Error handling includes catching DB exceptions, presenting user-friendly messages, and writing to server logs for operator action.
+
+7. UI/UX Design Principles
+
+Principles applied:
+- Clarity: Input fields are labeled clearly, required fields marked, and helper placeholders provided (e.g., course examples).
+- Consistency: Shared header/footer partials, consistent button styles (`.btn-primary`, `.btn-secondary`), uniform form-group spacing.
+- Feedback: Forms show inline errors; success and error flash messages; disabled buttons or spinner when submitting.
+- Accessibility: Keyboard-focusable controls, Enter/Space activation for interactive elements, semantic HTML structure.
+- Mobile-friendly: Responsive layouts, large touch targets, and footer links for access.
+
+Input Forms (description):
+- Signup form: fields for Full Name (required), Email (required), School (required), Course (optional), Password (required), Confirm Password (required). Client-side and server-side validation.
+- Profile form: editable fields for Course, Phone, Graduation Year, Social Links, Show in Directory toggles. Save and Cancel actions; save shows confirmation.
+- Request form: fields for type (testimonial/official), copies, delivery_method, purpose, addressed_to, notes. Validation ensures type and delivery are present.
+
+Output Screens (description):
+- Student Dashboard: displays name, email, course (Program Completed), recent requests with statuses, notifications list.
+- Track Requests modal: shows timeline of actions and admin notes for each request.
+- Admin Dashboard: statistics cards (total users, events, jobs, donations), lists of new requests with quick actions (view, restore, delete).
+
+8. Implementation Mapping
+
+8.1 ERD → SQL Tables (text mapping)
+- Entity: User -> Table: `users` (columns as in section 5). Primary key `id` (INTEGER / SERIAL).
+- Entity: TranscriptRequest -> Table: `transcripts` (id, student_email FK to users.email, type, copies, delivery_method, voucher_code, purpose, addressed_to, status, notes, deleted_at, created_at).
+- Entity: Notification -> Table: `notifications` (id, user_email, message, created_at, read_flag).
+- Entity: Event -> Table: `events`; RSVP -> `event_rsvps`.
+- Entity: Job -> Table: `jobs`; Application -> `job_applications`.
+- Entity: Mentorship -> Table: `mentorships`.
+- Entity: Donation -> Table: `donations`.
+
+8.2 Use Cases → Program Modules (suggested mapping)
+- UC2 Login -> Module: `auth` (in current project: `app.py` functions `login`, `admin_login`)
+- UC1 Signup -> Module: `auth.signup`
+- UC3 Profile Edit -> Module: `profile` (`/profile` handler)
+- UC4 Request Transcript/Testimonial -> Module: `requests` (`/api/transcripts` endpoints)
+- UC5 Admin Review -> Module: `admin.requests` (`/api/transcripts/<id>/update`)
+- UC6 Trash Management -> Module: `admin.trash` (permanent_delete, restore_bulk)
+- UC7 Notifications -> Module: `notifications` (`/api/notifications` endpoints)
+- UC8 Events/RSVP -> Module: `events` (`/api/events`)
+- UC9 Jobs -> Module: `jobs` (`/api/jobs`)
+
+Notes: For maintainability, refactor the single-file Flask app into an application factory with Blueprints: `auth`, `profile`, `requests`, `admin`, `events`, `jobs`, `notifications`.
+
+--- End of System Requirements Document ---
+
+Prepared by: Project Team
+Date: 2025-12-25
